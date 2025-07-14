@@ -21,22 +21,6 @@ Files
 - backup.txt       → Contains a backup board incase the board is lost
 
 -----------------------
-Example board.txt
------------------------
-=======Tic Tac Toe=======
-Player 1: X - Player 2: O
-
--------------------------
-|   1   |   2   |   3   |
--------------------------
-|   4   |   5   |   6   |
--------------------------
-|   7   |   8   |   9   |
--------------------------
-
-Score: P1 0 - 0 P2
-
------------------------
 Features
 -----------------------
 - Win detection (rows, columns, diagonals)  
