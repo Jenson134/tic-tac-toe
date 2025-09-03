@@ -21,26 +21,27 @@ class GameBrain:
                 print(line, end='')
             self.base_board = board
     
-    def reset_board(self):
+    def reset_board(self, code):
         with open ('board.txt', 'r+') as file:
             board = file.readlines()
         
-        for i in range(3,9):
+        for i in range(3,10):
             board[i] = self.base_board[i]
         
         with open ('board.txt', 'w') as file:
                 file.writelines(board)
 
-        self.update_board()
+        if code == 1:
+            self.update_board()
                 
 ### Mid-Game / End-Game Placement and Checks ###
     def get_input(self, count):
         try:
             u_input = input(f'\nPlayer {self.check_player(count)}, Enter your location:\n')
             return u_input
-        except KeyboardInterrupt as e:
+        except KeyboardInterrupt:
             self.reset_score()
-            self.reset_board()
+            self.reset_board(1)
 
     def place_marker(self, u_input, player):
         found = False
@@ -52,12 +53,12 @@ class GameBrain:
         with open ('board.txt', 'r+') as file:
             board = file.readlines()
 
-        for i in range(3, 9):
+        for i in range(3, 10):
             if str(u_input) in board[i]:
                 board[i] = board[i].replace(str(u_input), marker)
                 found = True
                 break
-            if not found and i == 8:
+            if not found and i == 9:
                  return False, print('Position taken, Try Again!'), self.update_board()
 
         with open ('board.txt', 'w') as file:
@@ -71,7 +72,7 @@ class GameBrain:
 
         board = []
 
-        board_lines = (lines[i] for i in [4,6,8])
+        board_lines = (lines[i] for i in [5,7,9])
         for line in board_lines:
              row = (line[4], line[12], line[20])
              board.append(row)
@@ -89,13 +90,7 @@ class GameBrain:
         if board[0][2] == board[1][1] == board[2][0] and board[0][2] in ['X', 'O']:
             return board[0][2]
 
-        digits = 0
-        for line in board:
-            if any(char.isdigit() for char in line):
-                digits += 1
-                break
-            
-        if digits == 0:
+        if not any(char.isdigit() for row in board for char in row):
             self.call_draw()
 
         return None
@@ -128,12 +123,12 @@ class GameBrain:
                 file.writelines(lines)
         print('\n=========================\n')
         print(f'\nCongratulations Player {player_num}, You won this round!\n')
-        self.reset_board()
+        self.reset_board(1)
 
     def call_draw(self):
         print('\n=========================\n')
         print(f'\nDraw! No-one wins this round.\n')
-        self.reset_board()
+        self.reset_board(1)
         return 'D'
     
     def reset_score(self):
@@ -152,6 +147,4 @@ class GameBrain:
         with open ('board.txt', 'w') as file:
             lines[-1] = scoreboard
             file.writelines(lines)
-        
-        self.update_board()
             
